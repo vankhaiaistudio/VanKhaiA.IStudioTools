@@ -39,7 +39,7 @@ class WorkerSignals(QObject):
 class AIStudioApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Văn Khải A.i Studio - PRO VERSION")
+        self.setWindowTitle("Văn Khải A.i Studio - PRO VERSION (Windows Piper.exe)")
         self.resize(1300, 850)
 
         # Internal state
@@ -175,6 +175,60 @@ class AIStudioApp(QMainWindow):
         hbox_gap_top.addWidget(self.btn_xuat_noigap)
         group_noigap_top.setLayout(hbox_gap_top)
         top_bar_layout.addWidget(group_noigap_top)
+
+        # --- Group Ngôn Ngữ (inline top bar, kế bên Nối Gap) ---
+        LANGUAGES = [
+            ("🇨🇳 Tiếng Trung",       "zh"),
+            ("🇻🇳 Tiếng Việt",        "vi"),
+            ("🇺🇸 Tiếng Anh",         "en"),
+            ("🇯🇵 Tiếng Nhật",        "ja"),
+            ("🇰🇷 Tiếng Hàn",         "ko"),
+            ("🇫🇷 Tiếng Pháp",        "fr"),
+            ("🇩🇪 Tiếng Đức",         "de"),
+            ("🇪🇸 Tiếng Tây Ban Nha", "es"),
+            ("🇹🇭 Tiếng Thái",        "th"),
+            ("🇮🇩 Tiếng Indonesia",   "id"),
+            ("🇷🇺 Tiếng Nga",         "ru"),
+            ("🇵🇹 Tiếng Bồ Đào Nha", "pt"),
+            ("🇮🇹 Tiếng Ý",           "it"),
+            ("🇦🇷 Tiếng Ả Rập",       "ar"),
+        ]
+        group_lang = QGroupBox("Ngôn Ngữ")
+        group_lang.setStyleSheet("QGroupBox { font-weight: bold; color: #6a0dad; }")
+        vbox_lang = QVBoxLayout()
+        vbox_lang.setContentsMargins(4, 2, 4, 2)
+        vbox_lang.setSpacing(2)
+
+        hbox_src = QHBoxLayout()
+        hbox_src.setSpacing(4)
+        lbl_src = QLabel("Gốc:")
+        lbl_src.setStyleSheet("font-size: 11px;")
+        lbl_src.setFixedWidth(28)
+        self.combo_lang_src = QComboBox()
+        self.combo_lang_src.setFixedWidth(155)
+        for name, code in LANGUAGES:
+            self.combo_lang_src.addItem(name, code)
+        self.combo_lang_src.setCurrentIndex(0)   # Tiếng Trung mặc định
+        hbox_src.addWidget(lbl_src)
+        hbox_src.addWidget(self.combo_lang_src)
+
+        hbox_dst = QHBoxLayout()
+        hbox_dst.setSpacing(4)
+        lbl_dst = QLabel("Đích:")
+        lbl_dst.setStyleSheet("font-size: 11px;")
+        lbl_dst.setFixedWidth(28)
+        self.combo_lang_dst = QComboBox()
+        self.combo_lang_dst.setFixedWidth(155)
+        for name, code in LANGUAGES:
+            self.combo_lang_dst.addItem(name, code)
+        self.combo_lang_dst.setCurrentIndex(1)   # Tiếng Việt mặc định
+        hbox_dst.addWidget(lbl_dst)
+        hbox_dst.addWidget(self.combo_lang_dst)
+
+        vbox_lang.addLayout(hbox_src)
+        vbox_lang.addLayout(hbox_dst)
+        group_lang.setLayout(vbox_lang)
+        top_bar_layout.addWidget(group_lang)
 
         top_bar_layout.addItem(QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
@@ -386,42 +440,6 @@ class AIStudioApp(QMainWindow):
         hbox_batch_audio.addWidget(self.btn_delete_all_audio)
         vbox_tts.addLayout(hbox_batch_audio)
         
-        line_tts = QFrame()
-        line_tts.setFrameShape(QFrame.HLine)
-        vbox_tts.addWidget(line_tts)
-
-        self.combo_merge_type = QComboBox()
-        self.combo_merge_type.addItems(["Ghép Nối Tiếp Nhau", "Ghép Chuẩn Timeline (Theo Thời Gian SRT)"])
-        vbox_tts.addWidget(self.combo_merge_type)
-
-        hbox_merge = QHBoxLayout()
-        self.btn_merge_audio = QPushButton("🎬 TẠO FILE GHÉP")
-        self.btn_merge_audio.setStyleSheet("background-color: #ff9800; color: white; font-weight: bold; padding: 6px;")
-        self.btn_play_merged = QPushButton("▶ Nghe File Ghép")
-        self.btn_play_merged.setStyleSheet("background-color: #17a2b8; color: white; font-weight: bold; padding: 6px;")
-        
-        hbox_merge.addWidget(self.btn_merge_audio)
-        hbox_merge.addWidget(self.btn_play_merged)
-        vbox_tts.addLayout(hbox_merge)
-
-        line_tts2 = QFrame()
-        line_tts2.setFrameShape(QFrame.HLine)
-        vbox_tts.addWidget(line_tts2)
-
-        lbl_timeline_hint = QLabel("⏱ Xuất audio khớp đúng thời lượng SRT:\nAudio dài hơn → tăng tốc | Audio ngắn hơn → thêm lặng")
-        lbl_timeline_hint.setStyleSheet("color: #666; font-size: 10px;")
-        lbl_timeline_hint.setWordWrap(True)
-        vbox_tts.addWidget(lbl_timeline_hint)
-
-        hbox_tl = QHBoxLayout()
-        self.btn_export_timeline = QPushButton("⏱ XUẤT CHUẨN TIMELINE")
-        self.btn_export_timeline.setStyleSheet("background-color: #2196F3; color: white; font-weight: bold; padding: 6px;")
-        self.btn_play_timeline = QPushButton("▶ Nghe")
-        self.btn_play_timeline.setStyleSheet("background-color: #17a2b8; color: white; font-weight: bold; padding: 6px;")
-        hbox_tl.addWidget(self.btn_export_timeline)
-        hbox_tl.addWidget(self.btn_play_timeline)
-        vbox_tts.addLayout(hbox_tl)
-
         group_tts.setLayout(vbox_tts)
         right_panel.addWidget(group_tts)
 
@@ -464,14 +482,19 @@ class AIStudioApp(QMainWindow):
         self.btn_save_config_btn.clicked.connect(self.save_tts_config)
         self.btn_batch_audio.clicked.connect(self.start_batch_audio_thread)
         self.btn_delete_all_audio.clicked.connect(self.delete_all_audio)
-        self.btn_merge_audio.clicked.connect(self.start_merge_audio_thread)
-        self.btn_play_merged.clicked.connect(self.play_merged_audio)
-        self.btn_export_timeline.clicked.connect(self.start_export_timeline_audio_thread)
-        self.btn_play_timeline.clicked.connect(self.play_timeline_audio)
 
         # Restore speed slider value from config
         self.slider_speed.setValue(self.tts_speed)
         self._update_speed_color(self.tts_speed / 100.0)
+
+    # ----------------- Language helpers -----------------
+    def get_src_lang(self) -> str:
+        """Trả về tên đầy đủ ngôn ngữ gốc (không có emoji)."""
+        return self.combo_lang_src.currentText().split(" ", 1)[-1].strip()
+
+    def get_dst_lang(self) -> str:
+        """Trả về tên đầy đủ ngôn ngữ đích (không có emoji)."""
+        return self.combo_lang_dst.currentText().split(" ", 1)[-1].strip()
 
     # ----------------- UI helper -----------------
     def show_guide(self):
@@ -816,244 +839,6 @@ class AIStudioApp(QMainWindow):
         except Exception as e:
             self.log(f"[LỖI PHÁT AUDIO] {e}")
 
-    # ----------- XUẤT AUDIO CHUẨN TIMELINE (Kéo/Giãn) -----------
-    def start_export_timeline_audio_thread(self):
-        if not self.srt_entries:
-            QMessageBox.warning(self, "Cảnh báo", "Vui lòng tải SRT trước!")
-            return
-        if self.is_generating_audio:
-            QMessageBox.warning(self, "Cảnh báo", "Hệ thống đang bận tạo audio. Vui lòng chờ!")
-            return
-        self.is_generating_audio = True
-        self.btn_dung.setEnabled(True)
-        threading.Thread(target=self.run_export_timeline_audio, daemon=True).start()
-
-    def run_export_timeline_audio(self):
-        """
-        Xuất 1 file WAV duy nhất: mỗi clip audio được kéo/giãn khớp đúng duration_ms
-        của dòng SRT, sau đó đặt vào đúng vị trí start_ms → KHÔNG đè giọng nhau.
-        
-        Logic:
-          - audio dài hơn SRT duration  → tăng tốc (resample) cho vừa khít
-          - audio ngắn hơn SRT duration → giữ nguyên + thêm im lặng phía sau
-          - đặt vào buffer tại vị trí start_ms của SRT
-        """
-        import wave as _wave
-        try:
-            import numpy as np
-            has_numpy = True
-        except ImportError:
-            has_numpy = False
-            self.log("[CẢNH BÁO] Không có numpy — dùng audioop fallback (chỉ 16-bit).")
-
-        output_path = os.path.join(self.audio_output_dir, "merged_nokede.wav")
-        self.log("[NOKEDE] 🔍 Đang quét danh sách audio và tính toán buffer...")
-
-        # ── Pass 1: Lấy thông số WAV chung + quét tổng độ dài cần thiết ──
-        ref_n_ch = ref_sw = ref_rate = None
-        segments = []   # list of (start_frame, adjusted_raw_bytes)
-
-        for idx, entry in enumerate(self.srt_entries):
-            if not self.is_generating_audio:
-                break
-            row_id   = entry.get('id', str(idx))
-            src      = os.path.join(self.audio_output_dir, f"audio_{row_id}.wav")
-            srt_ms   = entry.get('duration_ms', 0)
-            start_ms = self.srt_time_to_ms(entry.get('time', ''))
-
-            if not os.path.exists(src):
-                continue
-
-            try:
-                with _wave.open(src, 'rb') as wf:
-                    n_ch = wf.getnchannels()
-                    sw   = wf.getsampwidth()
-                    rate = wf.getframerate()
-                    n_fr = wf.getnframes()
-                    raw  = wf.readframes(n_fr)
-            except Exception as e:
-                self.log(f"[NOKEDE] ⚠ Bỏ qua ID {row_id}: {e}")
-                continue
-
-            # Lấy thông số tham chiếu từ file đầu tiên
-            if ref_rate is None:
-                ref_n_ch, ref_sw, ref_rate = n_ch, sw, rate
-                self.log(f"[NOKEDE] Thông số WAV: {rate} Hz | {n_ch}ch | {sw*8}-bit")
-
-            start_frame   = int(start_ms * rate / 1000)
-            audio_ms      = n_fr * 1000 / rate
-            target_frames = int(srt_ms * rate / 1000) if srt_ms > 0 else n_fr
-
-            # ── Điều chỉnh độ dài clip ──
-            if srt_ms > 0 and audio_ms > srt_ms + 50:   # dư > 50ms mới kéo
-                # TĂNG TỐC (OLA) — giữ pitch, không gây biến dạng cao độ
-                if has_numpy:
-                    if sw == 2:   dtype = np.int16
-                    elif sw == 1: dtype = np.uint8
-                    else:         dtype = np.int32
-
-                    # Tách thành từng channel rồi OLA từng channel
-                    samples = np.frombuffer(raw, dtype=dtype).astype(np.float32)
-                    if n_ch > 1:
-                        ch_data = [samples[c::n_ch] for c in range(n_ch)]
-                    else:
-                        ch_data = [samples]
-
-                    stretch_ratio = target_frames / n_fr   # < 1 = nén lại
-
-                    def _wsola_stretch(mono, ratio, sr):
-                        """
-                        WSOLA time-stretch — giữ pitch, chỉ thay đổi tốc độ.
-                        ratio < 1 = nén (nhanh hơn), ratio > 1 = giãn (chậm hơn).
-                        """
-                        win_size = int(sr * 0.025)   # 25ms window
-                        hop_in   = int(sr * 0.010)   # 10ms hop input
-                        hop_out  = max(1, int(hop_in * ratio))
-                        search   = int(sr * 0.005)   # 5ms WSOLA search range
-                        window   = np.hanning(win_size).astype(np.float32)
-                        n_in     = len(mono)
-                        out_len  = int(n_in * ratio) + win_size + search + 64
-                        out_buf  = np.zeros(out_len, np.float32)
-                        norm_buf = np.zeros(out_len, np.float32)
-                        out_ptr  = 0
-                        in_ptr   = 0
-                        while in_ptr + win_size <= n_in and out_ptr + win_size <= out_len:
-                            best_off, best_corr = 0, -np.inf
-                            if out_ptr >= hop_out:
-                                prev = out_buf[out_ptr - hop_out : out_ptr - hop_out + win_size]
-                                for off in range(-search, search + 1):
-                                    p = in_ptr + off
-                                    if p < 0 or p + win_size > n_in:
-                                        continue
-                                    c = float(np.dot(prev, mono[p : p + win_size]))
-                                    if c > best_corr:
-                                        best_corr, best_off = c, off
-                            actual = max(0, min(in_ptr + best_off, n_in - win_size))
-                            chunk  = mono[actual : actual + win_size].copy() * window
-                            out_buf [out_ptr : out_ptr + win_size] += chunk
-                            norm_buf[out_ptr : out_ptr + win_size] += window
-                            out_ptr += hop_out
-                            in_ptr  += hop_in
-                        norm_buf = np.maximum(norm_buf, 1e-8)
-                        t = int(n_in * ratio)
-                        return (out_buf / norm_buf)[:t]
-
-                    stretched_chs = [_wsola_stretch(ch, stretch_ratio, rate) for ch in ch_data]
-                    # Interleave channels back
-                    out_f = np.empty(target_frames * n_ch, np.float32)
-                    for c, ch in enumerate(stretched_chs):
-                        ch_trimmed = ch[:target_frames]
-                        out_f[c::n_ch] = ch_trimmed
-                    # Clip và convert về dtype gốc
-                    if dtype == np.int16:
-                        np.clip(out_f, -32768, 32767, out=out_f)
-                        clip_raw = out_f.astype(np.int16).tobytes()
-                    elif dtype == np.uint8:
-                        np.clip(out_f, 0, 255, out=out_f)
-                        clip_raw = out_f.astype(np.uint8).tobytes()
-                    else:
-                        clip_raw = out_f.astype(np.int32).tobytes()
-                else:
-                    import audioop
-                    ratio    = n_fr / target_frames
-                    clip_raw, _ = audioop.ratecv(raw, sw, n_ch, rate,
-                                                 int(rate / ratio), None)
-                    target_frames = len(clip_raw) // (sw * n_ch)
-            elif srt_ms > 0 and audio_ms < srt_ms - 50:  # thiếu > 50ms mới pad
-                # THÊM IM LẶNG: giữ nguyên audio + silence phần còn lại
-                silence = bytes((target_frames - n_fr) * n_ch * sw)
-                clip_raw = raw + silence
-            else:
-                # Khớp đủ gần → dùng nguyên
-                clip_raw = raw
-                target_frames = n_fr
-
-            segments.append((start_frame, target_frames, clip_raw))
-
-        if not segments:
-            self.log("[NOKEDE] ⚠ Không tìm thấy file audio nào để ghép.")
-            self.is_generating_audio = False
-            self.btn_dung.setEnabled(False if not self.is_translating else True)
-            return
-
-        # ── Pass 2: Cấp phát 1 buffer duy nhất và ghi từng clip ──
-        total_frames = max(sf + tf for sf, tf, _ in segments)
-        total_sec    = total_frames / ref_rate
-        self.log(f"[NOKEDE] Tổng thời lượng: {total_sec:.1f}s | Đang mix {len(segments)} clip...")
-        self.log(f"[NOKEDE] 🔀 Mix 0/{len(segments)} clip...")
-
-        if has_numpy:
-            if ref_sw == 2:   np_dtype, mix_dtype = np.int16, np.int32
-            elif ref_sw == 1: np_dtype, mix_dtype = np.uint8, np.int16
-            else:             np_dtype, mix_dtype = np.int32, np.int64
-
-            mix_buf = np.zeros(total_frames * ref_n_ch, dtype=mix_dtype)
-
-            for i, (start_frame, n_frames, clip_raw) in enumerate(segments):
-                start_sample = start_frame * ref_n_ch
-                seg_arr = np.frombuffer(clip_raw, dtype=np_dtype).astype(mix_dtype)
-                end_s   = start_sample + len(seg_arr)
-                if end_s <= len(mix_buf):
-                    mix_buf[start_sample:end_s] += seg_arr
-                else:
-                    mix_buf[start_sample:] += seg_arr[:len(mix_buf) - start_sample]
-                if (i + 1) % 100 == 0:
-                    self.log_inplace(f"[NOKEDE] 🔀 Mix {i+1}/{len(segments)} clip...")
-
-            # Clamp và chuyển về dtype gốc
-            if ref_sw == 2:
-                np.clip(mix_buf, -32768, 32767, out=mix_buf)
-                out_data = mix_buf.astype(np.int16).tobytes()
-            elif ref_sw == 1:
-                np.clip(mix_buf, 0, 255, out=mix_buf)
-                out_data = mix_buf.astype(np.uint8).tobytes()
-            else:
-                out_data = mix_buf.astype(np.int32).tobytes()
-        else:
-            # Fallback thuần Python — chỉ 16-bit PCM
-            if ref_sw != 2:
-                self.log("[LỖI] Cần numpy để xử lý WAV không phải 16-bit. Cài: pip install numpy")
-                self.is_generating_audio = False
-                self.btn_dung.setEnabled(False if not self.is_translating else True)
-                return
-            import array as _arr
-            mix_buf = _arr.array('i', [0] * (total_frames * ref_n_ch))
-            for start_frame, n_frames, clip_raw in segments:
-                start_sample = start_frame * ref_n_ch
-                seg_arr = _arr.array('h', clip_raw)
-                for j, s in enumerate(seg_arr):
-                    pos = start_sample + j
-                    if pos < len(mix_buf):
-                        mix_buf[pos] += s
-            out_data = _arr.array('h', [max(-32768, min(32767, s)) for s in mix_buf]).tobytes()
-
-        # ── Ghi file output duy nhất ──
-        try:
-            with _wave.open(output_path, 'wb') as wf:
-                wf.setnchannels(ref_n_ch)
-                wf.setsampwidth(ref_sw)
-                wf.setframerate(ref_rate)
-                wf.writeframes(out_data)
-            self.log(
-                f"[NOKEDE] ✅ Hoàn tất!\n"
-                f"           📁 File: merged_nokede.wav  ({total_sec:.1f}s)\n"
-                f"           🔊 Tổng: {len(segments)} clip được ghép"
-            )
-        except Exception as e:
-            self.log(f"[LỖI NOKEDE] Không ghi được file: {e}")
-
-        self.is_generating_audio = False
-        self.btn_dung.setEnabled(False if not self.is_translating else True)
-
-    def play_timeline_audio(self):
-        path = os.path.join(self.audio_output_dir, "merged_nokede.wav")
-        if os.path.exists(path):
-            self.log(f"[AUDIO] Đang phát: {path}")
-            self.play_audio(path)
-        else:
-            QMessageBox.warning(self, "Lỗi", "Chưa có file 'merged_nokede.wav'! Vui lòng bấm 'XUẤT CHUẨN TIMELINE' trước.")
-
-    # ----------------- Audio Merging (Nối tiếp / Timeline) -----------------
     def srt_time_to_ms(self, time_str):
         try:
             start_str = time_str.split('-->')[0].strip()
@@ -1064,185 +849,6 @@ class AIStudioApp(QMainWindow):
         except:
             pass
         return 0
-
-    def start_merge_audio_thread(self):
-        if self.is_generating_audio:
-            QMessageBox.warning(self, "Cảnh báo", "Hệ thống đang bận tạo audio. Vui lòng chờ!")
-            return
-        threading.Thread(target=self.run_merge_audio, daemon=True).start()
-
-    def run_merge_audio(self):
-        import wave as _wave
-        import array as _arr
-
-        self.is_generating_audio = True
-        self.log("[HỆ THỐNG] Bắt đầu gộp file audio...")
-        mode = self.combo_merge_type.currentIndex()
-        if mode == 0:
-            output_path = os.path.join(self.audio_output_dir, "merged_noitieip.wav")
-        else:
-            output_path = os.path.join(self.audio_output_dir, "merged_timeline.wav")
-        count = 0
-
-        try:
-            # ── Thu thập danh sách file hợp lệ ──
-            file_list = []
-            for idx, entry in enumerate(self.srt_entries):
-                row_id = entry.get('id', str(idx))
-                fp = os.path.join(self.audio_output_dir, f"audio_{row_id}.wav")
-                if os.path.exists(fp):
-                    file_list.append((fp, entry))
-
-            if not file_list:
-                self.log("[CẢNH BÁO] Không tìm thấy file audio lẻ nào để ghép.")
-                self.is_generating_audio = False
-                return
-
-            # ── Đọc thông số WAV từ file đầu tiên ──
-            with _wave.open(file_list[0][0], 'rb') as wf:
-                n_channels = wf.getnchannels()
-                sampwidth  = wf.getsampwidth()
-                framerate  = wf.getframerate()
-
-            self.log(f"[GHÉP AUDIO] {len(file_list)} file | {framerate} Hz | {n_channels}ch | {sampwidth*8}-bit")
-
-            # ══════════════════════════════════════════════════════════
-            # MODE 0: Nối tiếp — ghi thẳng raw PCM bytes, O(n), không copy
-            # ══════════════════════════════════════════════════════════
-            if mode == 0:
-                with _wave.open(output_path, 'wb') as out_wf:
-                    out_wf.setnchannels(n_channels)
-                    out_wf.setsampwidth(sampwidth)
-                    out_wf.setframerate(framerate)
-                    for i, (fp, entry) in enumerate(file_list):
-                        try:
-                            with _wave.open(fp, 'rb') as wf:
-                                out_wf.writeframes(wf.readframes(wf.getnframes()))
-                            count += 1
-                        except Exception as e:
-                            self.log(f"[CẢNH BÁO] Bỏ qua file lỗi: {os.path.basename(fp)} — {e}")
-                        if (i + 1) % 100 == 0:
-                            self.log_inplace(f"[GHÉP] 📎 {i+1}/{len(file_list)} file...")
-                self.log(f"[HỆ THỐNG] ✅ Đã ghép nối tiếp {count} file thành công!")
-
-            # ══════════════════════════════════════════════════════════
-            # MODE 1: Timeline — cấp phát 1 buffer duy nhất, ghi 1 lần
-            # ══════════════════════════════════════════════════════════
-            else:
-                self.log("[GHÉP AUDIO] Đang quét timeline và chuẩn bị bộ đệm...")
-
-                # Pass 1: tính tổng độ dài cần thiết
-                segments = []
-                max_end_frame = 0
-                for fp, entry in file_list:
-                    start_ms    = self.srt_time_to_ms(entry.get('time', ''))
-                    start_frame = int(start_ms * framerate / 1000)
-                    try:
-                        with _wave.open(fp, 'rb') as wf:
-                            n_frames = wf.getnframes()
-                        end_frame = start_frame + n_frames
-                        if end_frame > max_end_frame:
-                            max_end_frame = end_frame
-                        segments.append((fp, start_frame, n_frames))
-                    except Exception as e:
-                        self.log(f"[CẢNH BÁO] Bỏ qua: {os.path.basename(fp)} — {e}")
-
-                total_samples = max_end_frame * n_channels
-                total_sec     = max_end_frame / framerate
-                self.log(f"[GHÉP AUDIO] Thời lượng: {total_sec:.1f}s | Đang mix {len(segments)} file...")
-                self.log(f"[GHÉP] 📎 0/{len(segments)} file...")
-
-                # Pass 2: mix vào buffer
-                try:
-                    import numpy as np
-                    # numpy: vectorized, nhanh nhất
-                    if sampwidth == 2:
-                        np_dtype, mix_dtype = np.int16, np.int32
-                    elif sampwidth == 1:
-                        np_dtype, mix_dtype = np.uint8, np.int16
-                    else:
-                        np_dtype, mix_dtype = np.int32, np.int64
-
-                    mix_buf = np.zeros(total_samples, dtype=mix_dtype)
-
-                    for i, (fp, start_frame, n_frames) in enumerate(segments):
-                        start_sample = start_frame * n_channels
-                        try:
-                            with _wave.open(fp, 'rb') as wf:
-                                raw = wf.readframes(n_frames)
-                            seg_arr = np.frombuffer(raw, dtype=np_dtype).astype(mix_dtype)
-                            end_s   = start_sample + len(seg_arr)
-                            if end_s <= total_samples:
-                                mix_buf[start_sample:end_s] += seg_arr
-                            else:
-                                mix_buf[start_sample:] += seg_arr[:total_samples - start_sample]
-                            count += 1
-                        except Exception as e:
-                            self.log(f"[CẢNH BÁO] Bỏ qua: {os.path.basename(fp)} — {e}")
-                        if (i + 1) % 100 == 0:
-                            self.log_inplace(f"[GHÉP] 📎 {i+1}/{len(segments)} file...")
-
-                    # Clamp và chuyển về dtype gốc
-                    if sampwidth == 2:
-                        np.clip(mix_buf, -32768, 32767, out=mix_buf)
-                        out_data = mix_buf.astype(np.int16).tobytes()
-                    elif sampwidth == 1:
-                        np.clip(mix_buf, 0, 255, out=mix_buf)
-                        out_data = mix_buf.astype(np.uint8).tobytes()
-                    else:
-                        out_data = mix_buf.astype(np.int32).tobytes()
-
-                except ImportError:
-                    # Fallback: array module (chỉ hỗ trợ 16-bit PCM)
-                    self.log("[GHÉP AUDIO] numpy không có — dùng array module (16-bit only)...")
-                    if sampwidth != 2:
-                        self.log("[LỖI] Cần numpy để ghép WAV không phải 16-bit. Cài: pip install numpy")
-                        self.is_generating_audio = False
-                        return
-
-                    mix_buf = _arr.array('i', bytes(total_samples * 4))  # int32 pre-alloc
-                    for i, (fp, start_frame, n_frames) in enumerate(segments):
-                        start_sample = start_frame * n_channels
-                        try:
-                            with _wave.open(fp, 'rb') as wf:
-                                raw = wf.readframes(n_frames)
-                            seg_arr = _arr.array('h', raw)
-                            for j, s in enumerate(seg_arr):
-                                pos = start_sample + j
-                                if pos < total_samples:
-                                    mix_buf[pos] += s
-                            count += 1
-                        except Exception as e:
-                            self.log(f"[CẢNH BÁO] Bỏ qua: {os.path.basename(fp)} — {e}")
-                        if (i + 1) % 50 == 0:
-                            self.log_inplace(f"[GHÉP] 📎 {i+1}/{len(segments)} file...")
-
-                    out_arr  = _arr.array('h', [max(-32768, min(32767, s)) for s in mix_buf])
-                    out_data = out_arr.tobytes()
-
-                # Ghi output một lần duy nhất
-                with _wave.open(output_path, 'wb') as out_wf:
-                    out_wf.setnchannels(n_channels)
-                    out_wf.setsampwidth(sampwidth)
-                    out_wf.setframerate(framerate)
-                    out_wf.writeframes(out_data)
-
-                self.log(f"[HỆ THỐNG] ✅ Đã ghép chuẩn TIMELINE {count} file thành công!")
-
-        except Exception as e:
-            self.log(f"[LỖI GHÉP AUDIO] {e}")
-
-        self.is_generating_audio = False
-
-    def play_merged_audio(self):
-        mode = self.combo_merge_type.currentIndex()
-        fname = "merged_noitieip.wav" if mode == 0 else "merged_timeline.wav"
-        path = os.path.join(self.audio_output_dir, fname)
-        if os.path.exists(path):
-            self.log(f"[AUDIO] Đang phát file tổng: {path}")
-            self.play_audio(path)
-        else:
-            QMessageBox.warning(self, "Lỗi", f"Chưa có file '{fname}'! Vui lòng bấm 'TẠO FILE GHÉP' trước.")
 
     # ----------------- File load/save / SRT parsing -----------------
     def load_srt(self):
@@ -1565,7 +1171,7 @@ class AIStudioApp(QMainWindow):
         if self.chk_themcham.isChecked(): opts += "- Thêm dấu '...'\n"
         if self.chk_fix1tu.isChecked(): opts += "- XỬ LÝ CÂU 1 TỪ: Nếu dịch ra 1 chữ, BẮT BUỘC thêm từ đệm (đâu, thôi, rồi, ạ, hả, cơ, chứ, đây...) để thành 2-3 chữ.\n"
 
-        prompt = f"""Dịch {len(chunk)} dòng sang TIẾNG VIỆT (BẮT BUỘC DỊCH TOÀN BỘ).
+        prompt = f"""Dịch {len(chunk)} dòng từ {self.get_src_lang()} sang {self.get_dst_lang()} (BẮT BUỘC DỊCH TOÀN BỘ).
 Áp dụng nghiêm ngặt BỘ LUẬT DỊCH:
 {self.translation_rule}
 YÊU CẦU: Giữ nguyên ID [số]. Trả về Code Block.
@@ -1649,7 +1255,7 @@ DỮ LIỆU:
 
             data_string = "\n".join([f"[{item.get('id','')}] {item.get('original','')}" for item in chunk])
             
-            prompt = f"""Dịch {len(chunk)} dòng sang TIẾNG VIỆT (BẮT BUỘC DỊCH TOÀN BỘ).
+            prompt = f"""Dịch {len(chunk)} dòng từ {self.get_src_lang()} sang {self.get_dst_lang()} (BẮT BUỘC DỊCH TOÀN BỘ).
 Áp dụng nghiêm ngặt BỘ LUẬT DỊCH:
 {self.translation_rule}
 YÊU CẦU: Giữ nguyên ID [số]. Trả về Code Block.
@@ -1758,7 +1364,7 @@ DỮ LIỆU:
             if self.chk_fix1tu.isChecked():    opts += "- XỬ LÝ CÂU 1 TỪ: Nếu dịch ra 1 chữ, BẮT BUỘC thêm từ đệm.\n"
 
             data_string = "\n".join([f"[{item.get('id','')}] {item.get('original','')}" for item in chunk])
-            prompt = f"""Dịch {len(chunk)} dòng sang TIẾNG VIỆT (BẮT BUỘC DỊCH TOÀN BỘ).
+            prompt = f"""Dịch {len(chunk)} dòng từ {self.get_src_lang()} sang {self.get_dst_lang()} (BẮT BUỘC DỊCH TOÀN BỘ).
 Áp dụng nghiêm ngặt BỘ LUẬT DỊCH:
 {self.translation_rule}
 YÊU CẦU: Giữ nguyên ID [số]. Trả về Code Block.
@@ -1956,19 +1562,19 @@ DỮ LIỆU:
         def run_analysis():
             lines = len(self.srt_entries) if chk_all.isChecked() else spin.value()
             content = "\n".join([item['original'] for item in self.srt_entries[:lines]])
-            prompt = f"""Dựa vào nội dung phim:
+            prompt = f"""Dựa vào nội dung phim (ngôn ngữ gốc: {self.get_src_lang()}):
 {content}
-Hãy đóng vai chuyên gia ngôn ngữ, soạn thảo một 'BỘ LUẬT DỊCH THUẬT' chi tiết trong Code Block:
+Hãy đóng vai chuyên gia ngôn ngữ, soạn thảo một 'BỘ LUẬT DỊCH THUẬT' chi tiết (dịch từ {self.get_src_lang()} sang {self.get_dst_lang()}) trong Code Block:
 1. Xác định Thể loại & Thời đại (Cổ trang/Hiện đại/Học đường...).
 2. Bảng Xưng hô (Bắt buộc dùng: ...).
 3. Bảng Từ vựng BẮT BUỘC DÙNG (Ví dụ Cổ trang: 'Đa tạ', 'Huynh/Đệ').
 4. Bảng Từ vựng CẤM TUYỆT ĐỐI (Ví dụ Cổ trang cấm: 'Ok', 'Bye', 'Anh/Em').
-5. TIẾNG KHÁC NGOÀI TIẾNG TRUNG (TIẾNG ANH, ETC) THÌ BẮT BUỘC PHIÊN ÂM RA TIẾNG VIỆT ĐỌC ĐƯỢC. VÍ DỤ: 'I LOVE YOU' -> 'AI LỚP - DIU'.
+5. TIẾNG KHÁC NGOÀI {self.get_src_lang().upper()} THÌ BẮT BUỘC PHIÊN ÂM RA {self.get_dst_lang().upper()} ĐỌC ĐƯỢC.
 6. DỊCH HAY, BÁM SÁT - NGHIÊM CẤM CHẾ TỪ LINH TINH.
 7. Nếu có những từ '哈' thì dịch thành 'ha ha!', nhiều chữ thì tối đa 2 chữ 'ha ha!'.
 8. Nếu có những từ '啊' thì dịch thành 'á á'.
 9. Từ '哎' (Ai) bắt buộc phải dịch ra thành 'Ây da', 'Haizz', 'Ôi' hoặc từ cảm thán phù hợp.
-10. CHỮ IN HOA: TUYỆT ĐỐI không sử dụng chữ in hoa trong bản dịch. Bất kể tên riêng, tên nhân vật, địa danh, danh từ hay bất kỳ từ nào cũng phải viết bằng chữ in thường. Ví dụ: 'việt nam', 'hà nội', 'nguyễn văn a' - không bao giờ viết 'Việt Nam', 'Hà Nội', 'Nguyễn Văn A'."""
+10. CHỮ IN HOA: TUYỆT ĐỐI không sử dụng chữ in hoa trong bản dịch. Bất kể tên riêng, tên nhân vật, địa danh, danh từ hay bất kỳ từ nào cũng phải viết bằng chữ in thường."""
             preview.setText("Đang gửi cho Gemini...")
             threading.Thread(target=self._worker_analysis, args=(prompt, preview), daemon=True).start()
 
@@ -2035,7 +1641,7 @@ Hãy đóng vai chuyên gia ngôn ngữ, soạn thảo một 'BỘ LUẬT DỊCH
             if self.chk_fix1tu.isChecked(): opts += "- XỬ LÝ CÂU 1 TỪ: Nếu dịch ra 1 chữ, BẮT BUỘC thêm từ đệm (đâu, thôi, rồi, ạ, hả, cơ, chứ, đây...) để thành 2-3 chữ.\n"
 
             data_string = "\n".join([f"[{item.get('id','')}] {item.get('original','')}" for item in chunk])
-            prompt = f"""Dịch {len(chunk)} dòng sang TIẾNG VIỆT (BẮT BUỘC DỊCH TOÀN BỘ).
+            prompt = f"""Dịch {len(chunk)} dòng từ {self.get_src_lang()} sang {self.get_dst_lang()} (BẮT BUỘC DỊCH TOÀN BỘ).
 Áp dụng nghiêm ngặt BỘ LUẬT DỊCH:
 {self.translation_rule}
 YÊU CẦU: Giữ nguyên ID [số]. Trả về Code Block.
